@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASC Automação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0eaf4 0%, #cfdef3 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background: #1a3c5c;
+            padding: 20px 28px;
+            color: white;
+        }
+
+        .card-header h2 {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 1.6rem;
+        }
+
+        .card-header p {
+            opacity: 0.85;
+            font-size: 0.9rem;
+        }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        /* Formulário */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1a3c5c;
+            box-shadow: 0 0 0 3px rgba(26, 60, 92, 0.2);
+        }
+
+        textarea {
+            border-radius: 20px;
+            resize: vertical;
+        }
+
+        button {
+            background: #1a3c5c;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #0f2c44;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-secondary:hover {
+            background: #e6edf5;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Preview de registros */
+        .preview-title {
+            font-weight: 600;
+            margin: 20px 0 10px;
+            color: #1e293b;
+        }
+
+        .registros-preview {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .registro-item {
+            background: white;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .registro-info {
+            flex: 1;
+        }
+
+        .registro-info strong {
+            font-size: 0.9rem;
+        }
+
+        .registro-info small {
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            display: block;
+        }
+
+        .registro-actions button {
+            background: transparent;
+            padding: 4px 8px;
+            margin-left: 5px;
+            font-size: 0.8rem;
+        }
+
+        .edit-btn {
+            color: #1a3c5c;
+            border: 1px solid #1a3c5c;
+            background: white;
+        }
+
+        .delete-btn {
+            color: #b91c1c;
+            border: 1px solid #b91c1c;
+            background: white;
+        }
+
+        .success-msg {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 40px;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .footer {
+            background: #fafcff;
+            padding: 16px;
+            text-align: center;
+            font-size: 0.7rem;
+            border-top: 1px solid #e2edf7;
+            color: #5b6e8c;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Card: Login ASC (Opcional) -->
+    <div class="card">
+        <div class="card-header">
+            <h2>🔐 Login ASC (Atalho)</h2>
+            <p>Preencha seus dados e clique no botão para que o robô faça o login automaticamente. Não obrigatório.</p>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>Usuário ASC</label>
+                <input type="text" id="ascUser" placeholder="Digite seu usuário">
+            </div>
+            <div class="form-group">
+                <label>Senha ASC</label>
+                <input type="password" id="ascPass" placeholder="Digite sua senha">
+            </div>
+            <button id="btnLogin" onclick="loginASC()">🔓 Login Automático</button>
+            <div id="loginMsg" class="success-msg"></div>
+        </div>
+    </div>
+
+    <!-- Card: Gerador de Atendimentos -->
+    <div class="card">
+        <div class="card-header">
+            <h2>⚡ Gerador de Atendimentos</h2>
+            <p>Preencha os dados abaixo e clique em "Adicionar" para incluir na lista. Ao final, exporte o CSV.</p>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>📌 Tipo de atendimento</label>
+                <select id="fase">
+                    <option value="atendimento">📋 Cadastro (somente dados básicos)</option>
+                    <option value="fase1">🔧 Fase 1 – Pós atendimento</option>
+                    <option value="fase2">📅 Fase 2 – Agendamento completo</option>
+                </select>
+            </div>
+
+            <!-- Formulário de entrada (um único registro) -->
+            <div id="formularioRegistro">
+                <div class="form-group"><label>Segurado*</label><input type="text" id="seg" placeholder="Nome completo"></div>
+                <div class="form-group"><label>Telefone*</label><input type="tel" id="tel" placeholder="(11) 99999-9999"></div>
+                <div class="form-group"><label>Matrícula*</label><input type="text" id="mat" placeholder="Matrícula"></div>
+                <div class="campos-f1 campos-f2"><label>Agente*</label><input type="text" id="ag" placeholder="Agente"></div>
+                <div class="campos-f1"><label>Cia*</label><input type="text" id="cia" placeholder="Cia"></div>
+                <div class="campos-f1"><label>Serviço*</label><input type="text" id="srv" placeholder="Serviço"></div>
+                <div class="campos-f1"><label>Placa*</label><input type="text" id="pla" placeholder="Placa"></div>
+                <div class="campos-f2"><label>Data*</label><input type="date" id="data"></div>
+                <div class="campos-f2"><label>Horário*</label><input type="time" id="hora"></div>
+                <div class="campos-f2"><label>Endereço*</label><textarea id="end" rows="2" placeholder="Endereço completo"></textarea></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-secondary" onclick="adicionarRegistro()">+ Adicionar registro</button>
+            </div>
+
+            <!-- Preview da lista de registros -->
+            <div class="preview-title">📋 Registros adicionados</div>
+            <div id="previewList" class="registros-preview">
+                <div style="text-align:center; color:#5b6e8c; padding:20px;">Nenhum registro adicionado.</div>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="gerarCSV()">📄 Exportar CSV</button>
+            </div>
+        </div>
+        <div class="footer">
+            ⚡ O robô ASC irá processar automaticamente assim que o CSV for gerado.<br>
+            Para suporte ou dúvidas, entre em contato com Carlos Lima pelo Microsoft Teams.
+        </div>
+    </div>
+</div>
+
+<script>
+    // Array para armazenar os registros
+    let registros = [];
+
+    // Referências dos campos do formulário
+    const campos = {
+        seg: document.getElementById('seg'),
+        tel: document.getElementById('tel'),
+        mat: document.getElementById('mat'),
+        ag: document.getElementById('ag'),
+        cia: document.getElementById('cia'),
+        srv: document.getElementById('srv'),
+        pla: document.getElementById('pla'),
+        data: document.getElementById('data'),
+        hora: document.getElementById('hora'),
+        end: document.getElementById('end')
+    };
+
+    // Função para atualizar visibilidade dos campos extras conforme a fase
+    function atualizarVisibilidadeCampos() {
+        const fase = document.getElementById('fase').value;
+        const camposF1 = document.querySelectorAll('.campos-f1');
+        const camposF2 = document.querySelectorAll('.campos-f2');
+        if (fase === 'atendimento') {
+            camposF1.forEach(el => el.style.display = 'none');
+            camposF2.forEach(el => el.style.display = 'none');
+        } else if (fase === 'fase1') {
+            camposF1.forEach(el => el.style.display = 'block');
+            camposF2.forEach(el => el.style.display = 'none');
+        } else if (fase === 'fase2') {
+            camposF1.forEach(el => el.style.display = 'none');
+            camposF2.forEach(el => el.style.display = 'block');
+        }
+    }
+
+    // Adicionar um novo registro à lista (validação)
+    function adicionarRegistro() {
+        const fase = document.getElementById('fase').value;
+        const seg = campos.seg.value.trim();
+        const tel = campos.tel.value.trim();
+        const mat = campos.mat.value.trim();
+        const ag = campos.ag.value.trim();
+
+        if (!seg || !tel || !mat) {
+            alert('Preencha Segurado, Telefone e Matrícula.');
+            return;
+        }
+
+        let dados = { seg, tel, mat, ag, fase };
+
+        if (fase === 'fase1') {
+            const cia = campos.cia.value.trim();
+            const srv = campos.srv.value.trim();
+            const pla = campos.pla.value.trim();
+            if (!ag || !cia || !srv || !pla) {
+                alert('Preencha todos os campos da Fase 1.');
+                return;
+            }
+            dados.cia = cia;
+            dados.srv = srv;
+            dados.pla = pla;
+        } else if (fase === 'fase2') {
+            const data = campos.data.value.trim();
+            const hora = campos.hora.value.trim();
+            const end = campos.end.value.trim();
+            if (!ag || !data || !hora || !end) {
+                alert('Preencha todos os campos da Fase 2.');
+                return;
+            }
+            dados.data = data;
+            dados.hora = hora;
+            dados.end = end;
+        }
+
+        registros.push(dados);
+        limparFormulario();
+        atualizarPreview();
+    }
+
+    // Limpar formulário após adicionar
+    function limparFormulario() {
+        for (let key in campos) {
+            if (campos[key]) campos[key].value = '';
+        }
+    }
+
+    // Editar registro (carregar nos campos e remover da lista)
+    function editarRegistro(index) {
+        const r = registros[index];
+        // Carregar dados no formulário
+        campos.seg.value = r.seg;
+        campos.tel.value = r.tel;
+        campos.mat.value = r.mat;
+        campos.ag.value = r.ag || '';
+        if (r.fase === 'fase1') {
+            campos.cia.value = r.cia || '';
+            campos.srv.value = r.srv || '';
+            campos.pla.value = r.pla || '';
+        } else if (r.fase === 'fase2') {
+            campos.data.value = r.data || '';
+            campos.hora.value = r.hora || '';
+            campos.end.value = r.end || '';
+        }
+        // Remove da lista
+        registros.splice(index, 1);
+        atualizarPreview();
+        // Atualizar visibilidade dos campos conforme a fase do registro editado
+        document.getElementById('fase').value = r.fase;
+        atualizarVisibilidadeCampos();
+    }
+
+    // Excluir registro
+    function excluirRegistro(index) {
+        registros.splice(index, 1);
+        atualizarPreview();
+    }
+
+    // Atualizar a visualização da lista de registros (preview)
+    function atualizarPreview() {
+        const container = document.getElementById('previewList');
+        if (registros.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#5b6e8c; padding:20px;">Nenhum registro adicionado.</div>';
+            return;
+        }
+
+        let html = '';
+        registros.forEach((r, idx) => {
+            let resumo = `${r.seg} - ${r.tel} - ${r.mat}`;
+            if (r.fase === 'fase1') resumo += ` - Agente: ${r.ag} - Cia: ${r.cia} - Serviço: ${r.srv} - Placa: ${r.pla}`;
+            else if (r.fase === 'fase2') resumo += ` - Agente: ${r.ag} - Data: ${r.data} - Horário: ${r.hora}`;
+            html += `
+                <div class="registro-item">
+                    <div class="registro-info">
+                        <strong>${r.seg}</strong><br>
+                        <small>${r.tel} | ${r.mat}</small>
+                        ${r.fase !== 'atendimento' ? `<small>${r.fase === 'fase1' ? `Agente: ${r.ag} | Cia: ${r.cia} | Serviço: ${r.srv} | Placa: ${r.pla}` : `Agente: ${r.ag} | Data: ${r.data} | Horário: ${r.hora} | Endereço: ${r.end.substring(0,30)}...`}</small>` : ''}
+                    </div>
+                    <div class="registro-actions">
+                        <button class="edit-btn" onclick="editarRegistro(${idx})">✏️</button>
+                        <button class="delete-btn" onclick="excluirRegistro(${idx})">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    // Gerar CSV com todos os registros da lista
+    function gerarCSV() {
+        if (registros.length === 0) {
+            alert('Adicione pelo menos um registro antes de exportar.');
+            return;
+        }
+
+        // Determinar o cabeçalho com base no tipo do primeiro registro (assumimos que todos são do mesmo tipo)
+        const tipo = registros[0].fase;
+        let cabecalho = [];
+        if (tipo === 'atendimento') cabecalho = ['Segurado','Telefone','Matricula'];
+        else if (tipo === 'fase1') cabecalho = ['Segurado','Telefone','Matricula','Agente','Cia','Servico','Placa'];
+        else cabecalho = ['Segurado','Telefone','Matricula','Agente','Data','Horario','Endereco'];
+
+        const linhas = registros.map(r => {
+            if (tipo === 'atendimento') return [r.seg, r.tel, r.mat];
+            if (tipo === 'fase1') return [r.seg, r.tel, r.mat, r.ag, r.cia, r.srv, r.pla];
+            return [r.seg, r.tel, r.mat, r.ag, r.data, r.hora, r.end];
+        });
+
+        const csv = cabecalho.join(',') + '\n' + linhas.map(l => l.join(',')).join('\n');
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'asc_input.csv';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        alert('CSV exportado! O robô irá processar em instantes.');
+    }
+
+    // Login ASC (gera CSV de login)
+    function loginASC() {
+        let user = document.getElementById('ascUser').value.trim();
+        let pass = document.getElementById('ascPass').value;
+        if (!user || !pass) {
+            alert('Preencha usuário e senha.');
+            return;
+        }
+        let csv = `usuario,senha\n${user},${pass}`;
+        let blob = new Blob([csv], {type: 'text/csv'});
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'asc_login.csv';
+        link.click();
+        URL.revokeObjectURL(link.href);
+
+        let msgDiv = document.getElementById('loginMsg');
+        msgDiv.innerText = '✅ Login solicitado! O robô fará o acesso automaticamente.';
+        msgDiv.style.display = 'block';
+        setTimeout(() => msgDiv.style.display = 'none', 5000);
+    }
+
+    // Inicialização: evento de mudança de fase para mostrar/esconder campos
+    document.getElementById('fase').addEventListener('change', atualizarVisibilidadeCampos);
+    atualizarVisibilidadeCampos();
+</script>
+</body>
+</html>
